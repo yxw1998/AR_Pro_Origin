@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.UserProHistoryMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.UserProHistory">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="userCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="miniOpenId" jdbcType="VARCHAR" property="miniOpenId"/>
+        <result column="projectCode" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="projectName" jdbcType="VARCHAR" property="projectName"/>
+        <result column="projectIntroduce" jdbcType="VARCHAR" property="projectIntroduce"/>
+        <result column="bookCover" jdbcType="VARCHAR" property="bookCover"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userCode,miniOpenId, projectCode, projectName, projectIntroduce, bookCover, addTime
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.UserProHistory"
+            useGeneratedKeys="true">
+        insert into user_pro_history (userCode, miniOpenId, projectCode, projectName,
+                                      projectIntroduce, bookCover, addTime,
+                                      updateTime, `enable`, activity,
+                                      createrCode)
+        values (#{userCode,jdbcType=VARCHAR}, #{miniOpenId,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR},
+                #{projectName,jdbcType=VARCHAR},
+                #{projectIntroduce,jdbcType=VARCHAR}, #{bookCover,jdbcType=VARCHAR}, now(), null,
+                true, true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateHistory">
+        update user_pro_history
+        set addTime = now()
+        where miniOpenId = #{miniOpenId}
+          and projectCode = #{projectCode}
+    </update>
+    <select id="selHistoryByMini" resultType="cn.ar.entity.UserProHistory">
+        select
+        <include refid="Base_Column_List"/>
+        from user_pro_history
+        where activity = true
+        and enable = true
+        <if test="miniOpenId != null">
+            and miniOpenId = #{miniOpenId}
+        </if>
+        <if test="userCode != null">
+            and userCode = #{userCode}
+        </if>
+    </select>
+    <select id="checkRepeat" resultType="cn.ar.entity.UserProHistory">
+        select projectCode
+        from user_pro_history
+        where miniOpenId = #{miniOpenId}
+          and projectCode = #{projectCode}
+          and activity = true
+          and enable = true
+    </select>
+</mapper>

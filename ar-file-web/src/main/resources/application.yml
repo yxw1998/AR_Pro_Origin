@@ -1,0 +1,11 @@
+server:
+  port: 8994
+  servlet:
+    context-path: /arFileWeb
+
+logging:
+  config: classpath:logback-spring.xml
+
+log:
+  localLogPath: ../log/fileWebLog
+  cloudLogPath: fileWebLog

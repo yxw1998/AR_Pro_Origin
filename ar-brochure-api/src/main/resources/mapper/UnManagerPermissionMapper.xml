@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.UnManagerPermissionMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.UnManagerPermission">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="managerUserCode" jdbcType="VARCHAR" property="managerUserCode"/>
+        <result column="permissionCode" jdbcType="VARCHAR" property="permissionCode"/>
+        <result column="permissionName" jdbcType="VARCHAR" property="permissionName"/>
+        <result column="permissionLevel" jdbcType="INTEGER" property="permissionLevel"/>
+        <result column="parentCode" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, managerUserCode, permissionCode, permissionName, permissionLevel, parentCode,
+    addTime, updateTime, `enable`, activity, createrCode
+    </sql>
+    <insert id="insert" parameterType="cn.ar.entity.UnManagerPermission"
+            useGeneratedKeys="true">
+        insert into un_manager_permission (managerUserCode, permissionCode,
+        permissionName, permissionLevel, parentCode,
+        addTime, updateTime, `enable`,
+        activity, createrCode)
+        values
+        <foreach collection="unManagerPermissionList" separator="," item="item">
+            (
+            #{item.managerUserCode},#{item.permissionCode},#{item.permissionName},#{item.permissionLevel},#{item.parentCode},
+            now(),null,true,true,#{item.createrCode}
+            )
+        </foreach>
+    </insert>
+    <select id="selPermission" resultType="cn.ar.entity.UnManagerPermission">
+        select *
+        from un_manager_permission
+        where managerUserCode = #{managerUserCode}
+          and permissionCode = #{permissionCode}
+          and activity = true
+          and enable = true
+    </select>
+    <select id="selManagerBasePermission" resultType="cn.ar.entity.Permission">
+        select *
+        from permission_manager
+        where activity = true
+          and enable = true;
+    </select>
+
+    <select id="selCustomerBasePermission" resultType="cn.ar.entity.Permission">
+        select *
+        from permission_customer
+        where activity = true
+          and enable = true;
+    </select>
+</mapper>

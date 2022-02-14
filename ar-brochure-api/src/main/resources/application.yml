@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+#    active: prod
+server:
+  servlet:
+    context-path: /arBrochureApi
+  port: 8081
+
+mybatis:
+  #  configuration:
+  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    cn.ar.mapper: debug
+
+log:
+  localLogPath: ../log/arVrochureApiLog
+  cloudLogPath: arVrochureApiLog

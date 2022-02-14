@@ -1,0 +1,11 @@
+server:
+  servlet:
+    context-path: /wxMiniAppWeb
+  port: 8992
+
+logging:
+  config: classpath:logback-spring.xml
+
+log:
+  localLogPath: ../log/wxWebLog
+  cloudLogPath: wxWebLog

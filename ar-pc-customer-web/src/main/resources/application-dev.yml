@@ -1,0 +1,14 @@
+spring:
+  redis:
+    database: 3
+    password: pwd
+    host: host
+    timeout: 5000
+    jedis:
+      pool:
+        min-idle: 1
+        max-idle: 5
+        max-active: 5
+        max-wait: -1
+logging:
+  config: classpath:logback-spring.xml

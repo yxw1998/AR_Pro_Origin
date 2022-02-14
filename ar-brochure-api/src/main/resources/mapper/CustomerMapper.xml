@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.CustomerMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.Customer">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="customerAccount" jdbcType="VARCHAR" property="customerAccount"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="linkName" jdbcType="VARCHAR" property="linkName"/>
+        <result column="linkEmail" jdbcType="VARCHAR" property="linkEmail"/>
+        <result column="linkPhone" jdbcType="VARCHAR" property="linkPhone"/>
+        <result column="checkType" jdbcType="INTEGER" property="checkType"/>
+        <result column="checkStatus" jdbcType="INTEGER" property="checkStatus"/>
+        <result column="cardType" jdbcType="INTEGER" property="cardType"/>
+        <result column="cardNo" jdbcType="VARCHAR" property="cardNo"/>
+        <result column="cardPosPic" jdbcType="VARCHAR" property="cardPosPic"/>
+        <result column="cardNegPic" jdbcType="VARCHAR" property="cardNegPic"/>
+        <result column="vipLevel" jdbcType="INTEGER" property="vipLevel"/>
+        <result column="pubOpenId" jdbcType="VARCHAR" property="pubOpenId"/>
+        <result column="miniOpenId" jdbcType="VARCHAR" property="miniOpenId"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+        <collection property="permissionList" ofType="cn.ar.entity.Permission">
+            <id column="per_id" jdbcType="BIGINT" property="id"/>
+            <result column="permissionCode" jdbcType="VARCHAR" property="permissionCode"/>
+            <result column="permissionName" jdbcType="VARCHAR" property="permissionName"/>
+            <result column="permissionLevel" jdbcType="INTEGER" property="permissionLevel"/>
+            <result column="parentCode" jdbcType="VARCHAR" property="parentCode"/>
+            <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+            <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="enable" jdbcType="BIT" property="enable"/>
+            <result column="activity" jdbcType="BIT" property="activity"/>
+            <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+        </collection>
+    </resultMap>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.Customer" useGeneratedKeys="true">
+        insert into customer (customerCode, customerAccount, `password`,
+                              `name`, linkName, linkEmail,
+                              linkPhone, checkType, checkStatus,
+                              cardType, cardNo, cardPosPic,
+                              cardNegPic, vipLevel, pubOpenId,
+                              miniOpenId, addTime, updateTime,
+                              `enable`, activity, createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{customerAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{name,jdbcType=VARCHAR}, #{linkName,jdbcType=VARCHAR}, #{linkEmail,jdbcType=VARCHAR},
+                #{linkPhone,jdbcType=VARCHAR}, #{checkType,jdbcType=INTEGER}, #{checkStatus,jdbcType=INTEGER},
+                #{cardType,jdbcType=INTEGER}, #{cardNo,jdbcType=VARCHAR}, #{cardPosPic,jdbcType=VARCHAR},
+                #{cardNegPic,jdbcType=VARCHAR}, #{vipLevel,jdbcType=INTEGER}, #{pubOpenId,jdbcType=VARCHAR},
+                #{miniOpenId,jdbcType=VARCHAR}, now(), #{updateTime,jdbcType=TIMESTAMP},
+                true, true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertLogin">
+        insert into customer_login_log(customerCode, customerUserCode, loginTime, loginType, token, endTime, addTime,
+                                       updateTime, enable, activity, createrCode)
+        values (#{customerCode}, null, now(), 1, #{token}, null, now(), null, true, true, #{createrCode})
+    </insert>
+    <update id="logout">
+        update customer_login_log
+        set endTime    = now(),
+            updateTime = now()
+        where customerCode = #{customerCode}
+          and token = #{token}
+          and activity = true
+          and enable = true
+    </update>
+    <select id="selectByCustomerAccount" resultMap="BaseResultMap">
+        select a.*, b.permissionCode, b.permissionName, b.permissionLevel, b.parentCode
+        from customer a
+                 left join un_customer_user_permission b
+                           on (a.customerCode = b.customerCode and b.customerUserCode is null)
+        where a.customerAccount = #{customerAccount}
+          and a.activity = true
+          and a.enable = true
+    </select>
+    <select id="selCustomerByCode" resultType="cn.ar.entity.Customer">
+        select customerCode,
+               customerAccount,
+               `name`,
+               linkName,
+               linkEmail,
+               linkPhone,
+               checkType,
+               checkStatus,
+               cardType,
+               cardNo,
+               cardPosPic,
+               cardNegPic,
+               vipLevel,
+               pubOpenId,
+               miniOpenId
+        from customer
+        where customerCode = #{customerCode}
+          and activity = true
+          and enable = true
+    </select>
+    <select id="selCustomerList" resultType="cn.ar.entity.Customer">
+        select customerCode,
+        customerAccount,
+        `name`,
+        linkName,
+        linkEmail,
+        linkPhone,
+        checkType,
+        checkStatus,
+        cardType,
+        cardNo,
+        cardPosPic,
+        cardNegPic,
+        vipLevel,
+        pubOpenId,
+        miniOpenId
+        from customer where activity = true and enable = true
+        <if test="customerCodeList.size>0">
+            and customerCode in (
+            <foreach collection="customerCodeList" separator="," item="item">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+    <select id="selLoginLog" resultType="cn.ar.entity.CustomerLoginLog">
+        select *
+        from customer_login_log
+        where customerCode = #{customerCode}
+        and activity = true
+        and enable = true
+        and customerUserCode is not null
+        <if test="customerUserCodeList.size>0">
+            and customerUserCode in (
+            <foreach collection="customerUserCodeList" item="item" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+
+    </select>
+    <select id="selCustomerLoginLog" resultType="cn.ar.entity.CustomerLoginLog">
+        select *
+        from customer_login_log
+        where
+        activity = true
+        and enable = true
+        and customerUserCode is null
+        <if test="customerCodeList.size>0">
+            and customerCode in (
+            <foreach collection="customerCodeList" item="item" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+    <select id="selCustomerUserPermissionList" resultType="cn.ar.entity.UnCustomerUserPermission">
+        select *
+        from un_customer_user_permission
+        where customerCode = #{customerCode}
+          and customerUserCode = #{customerUserCode}
+          and activity = true
+          and enable = true
+    </select>
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.InterBaseParamMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.InterBaseParam">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="projectCode" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="classCode" jdbcType="VARCHAR" property="classCode"/>
+        <result column="mediaCode" jdbcType="VARCHAR" property="mediaCode"/>
+        <result column="baseParamCode" jdbcType="VARCHAR" property="baseParamCode"/>
+        <result column="baseParamKey" jdbcType="VARCHAR" property="baseParamKey"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        customerCode, projectCode, mediaCode, baseParamCode, baseParamKey
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.InterBaseParam"
+            useGeneratedKeys="true">
+        insert into inter_base_param (customerCode, projectCode, classCode, mediaCode,
+                                      baseParamCode, baseParamKey, addTime,
+                                      updateTime, `enable`, activity,
+                                      createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR},
+                #{mediaCode,jdbcType=VARCHAR},
+                #{baseParamCode,jdbcType=VARCHAR}, #{baseParamKey,jdbcType=VARCHAR}, now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertList">
+        insert into inter_base_param (customerCode, projectCode, classCode, mediaCode,
+        baseParamCode, baseParamKey, addTime,
+        updateTime, `enable`, activity,
+        createrCode)
+        values
+        <if test="baseParamList.size>0">
+            <foreach collection="baseParamList" item="item" separator=",">
+                (#{item.customerCode,jdbcType=VARCHAR}, #{item.projectCode,jdbcType=VARCHAR},
+                #{item.classCode,jdbcType=VARCHAR},
+                #{item.mediaCode,jdbcType=VARCHAR},
+                #{item.baseParamCode,jdbcType=VARCHAR}, #{item.baseParamKey,jdbcType=VARCHAR}, now(),
+                null, true, true,
+                #{item.createrCode,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+    </insert>
+    <select id="checkRepeat" resultType="cn.ar.entity.InterBaseParam">
+        select
+        <include refid="Base_Column_List"/>
+        from inter_base_param
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and mediaCode = #{mediaCode}
+        and baseParamKey = #{baseParamKey}
+        and activity = true
+        and `enable` = true
+    </select>
+    <select id="selBaseParamByMediaCode" resultType="cn.ar.entity.InterBaseParam">
+        select
+        <include refid="Base_Column_List"/>
+        from inter_base_param
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        <if test="classCode != null">
+            and classCode = #{classCode}
+        </if>
+        and activity = true
+        and `enable` = true
+    </select>
+    <select id="selByCodeShow" resultType="cn.ar.entity.InterBaseParam">
+        select
+        <include refid="Base_Column_List"/>
+        from inter_base_param
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and mediaCode = #{mediaCode}
+        and activity = true
+        and `enable` = true
+    </select>
+</mapper>

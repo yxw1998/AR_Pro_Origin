@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.CustomerUserMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.CustomerUser">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="customerUserCode" jdbcType="VARCHAR" property="customerUserCode"/>
+        <result column="customerUserAccount" jdbcType="VARCHAR" property="customerUserAccount"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="pubOpenId" jdbcType="VARCHAR" property="pubOpenId"/>
+        <result column="miniOpenId" jdbcType="VARCHAR" property="miniOpenId"/>
+        <result column="vipLevel" jdbcType="INTEGER" property="vipLevel"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+        <collection property="permissionList" ofType="cn.ar.entity.Permission">
+            <id column="per_id" jdbcType="BIGINT" property="id"/>
+            <result column="permissionCode" jdbcType="VARCHAR" property="permissionCode"/>
+            <result column="permissionName" jdbcType="VARCHAR" property="permissionName"/>
+            <result column="permissionLevel" jdbcType="INTEGER" property="permissionLevel"/>
+            <result column="parentCode" jdbcType="VARCHAR" property="parentCode"/>
+            <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+            <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="enable" jdbcType="BIT" property="enable"/>
+            <result column="activity" jdbcType="BIT" property="activity"/>
+            <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        customerCode, customerUserCode, customerUserAccount, `name`, sex,
+    email, phone, pubOpenId, miniOpenId, vipLevel
+    </sql>
+    <!--    <include refid="Base_Column_List" />-->
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.CustomerUser"
+            useGeneratedKeys="true">
+        insert into customer_user (customerCode, customerUserCode, customerUserAccount,
+                                   `password`, `name`, sex,
+                                   email, phone, pubOpenId,
+                                   miniOpenId, vipLevel, addTime,
+                                   updateTime, `enable`, activity,
+                                   createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{customerUserCode,jdbcType=VARCHAR},
+                #{customerUserAccount,jdbcType=VARCHAR},
+                #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER},
+                #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{pubOpenId,jdbcType=VARCHAR},
+                #{miniOpenId,jdbcType=VARCHAR}, #{vipLevel,jdbcType=INTEGER}, now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertLogin">
+        insert into customer_login_log(customerCode, customerUserCode, loginTime, loginType, token, endTime, addTime,
+                                       updateTime, enable, activity, createrCode)
+        values (#{customerCode}, #{customerUserCode}, now(), 1, #{token}, null, now(), null, true, true, #{createrCode})
+    </insert>
+    <update id="logout">
+        update customer_login_log
+        set endTime    = now(),
+            updateTime = now()
+        where customerUserCode = #{code}
+          and token = #{token}
+          and activity = true
+          and enable = true
+    </update>
+    <select id="selCustomerUserByCode" resultType="cn.ar.entity.CustomerUser">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_user where customerCode = #{customerCode}
+        and customerUserCode = #{customerUserCode}
+        and activity = true
+        and enable =true
+    </select>
+    <select id="selCustomerUserByAccount" resultMap="BaseResultMap">
+        select a.*,b.permissionCode,b.permissionName,b.permissionLevel,b.parentCode
+        from customer_user a left join un_customer_user_permission b
+        on a.customerUserCode = b.customerUserCode
+        where a.customerUserAccount = #{customerUserAccount}
+          and a.activity = true
+          and a.enable = true
+    </select>
+    <select id="selCustomerUserList" resultType="cn.ar.entity.CustomerUser">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_user
+        where customerCode = #{customerCode}
+        and activity = true
+        and enable =true
+        <if test="customerUserCodeList.size>0">
+            and customerUserCode in (
+            <foreach collection="customerUserCodeList" item="item" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+</mapper>

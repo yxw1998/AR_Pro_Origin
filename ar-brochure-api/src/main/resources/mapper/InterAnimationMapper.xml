@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.InterAnimationMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.InterAnimation">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="projectCode" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="mediaCode" jdbcType="VARCHAR" property="mediaCode"/>
+        <result column="animationCode" jdbcType="VARCHAR" property="animationCode"/>
+        <result column="animationName" jdbcType="VARCHAR" property="animationName"/>
+        <result column="paramStr" jdbcType="VARCHAR" property="paramStr"/>
+        <result column="iconObsName" jdbcType="VARCHAR" property="iconObsName"/>
+        <result column="iconName" jdbcType="VARCHAR" property="iconName"/>
+        <result column="iconObsPath" jdbcType="VARCHAR" property="iconObsPath"/>
+        <result column="fileSuffix" jdbcType="VARCHAR" property="fileSuffix"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        customerCode, projectCode, mediaCode, animationCode, animationName, paramStr,
+    iconObsName, iconName,
+concat("//ar-test-1130.obs.cn-east-3.myhuaweicloud.com/",iconObsPath,iconObsName) as iconObsPath
+#     concat("//obsa.arsnowslide.com/",iconObsPath,iconObsName) as iconObsPath
+, fileSuffix
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.InterAnimation"
+            useGeneratedKeys="true">
+        insert into inter_animation (customerCode, projectCode, mediaCode,
+                                     animationCode, animationName, paramStr,
+                                     iconObsName, iconName, iconObsPath,
+                                     fileSuffix, addTime, updateTime,
+                                     `enable`, activity, createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{mediaCode,jdbcType=VARCHAR},
+                #{animationCode,jdbcType=VARCHAR}, #{animationName,jdbcType=VARCHAR}, #{paramStr,jdbcType=VARCHAR},
+                #{iconObsName,jdbcType=VARCHAR}, #{iconName,jdbcType=VARCHAR}, #{iconObsPath,jdbcType=VARCHAR},
+                #{fileSuffix,jdbcType=VARCHAR}, now(),
+                null, true, true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertList">
+        insert into inter_animation (customerCode, projectCode, mediaCode,
+                                     animationCode, animationName, paramStr,
+                                     iconObsName, iconName, iconObsPath,
+                                     fileSuffix, addTime, updateTime,
+                                     `enable`, activity, createrCode)
+        values
+        <if test="animationList.size()>0" >
+            <foreach collection="animationList" item="item" separator=",">
+        (#{item.customerCode,jdbcType=VARCHAR}, #{item.projectCode,jdbcType=VARCHAR}, #{item.mediaCode,jdbcType=VARCHAR},
+        #{item.animationCode,jdbcType=VARCHAR}, #{item.animationName,jdbcType=VARCHAR}, #{item.paramStr,jdbcType=VARCHAR},
+        #{item.iconObsName,jdbcType=VARCHAR}, #{item.iconName,jdbcType=VARCHAR}, #{item.iconObsPath,jdbcType=VARCHAR},
+        #{item.fileSuffix,jdbcType=VARCHAR}, now(),
+        null, true, true, #{item.createrCode,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+    </insert>
+    <select id="checkRepeat" resultType="cn.ar.entity.InterAnimation">
+        select
+        <include refid="Base_Column_List"/>
+        from inter_animation
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and iconObsName = #{iconObsName}
+        and iconObsPath = #{iconObsPath}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selByCodeShow" resultType="cn.ar.entity.InterAnimation">
+        select
+        <include refid="Base_Column_List" />
+        from inter_animation
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and mediaCode = #{mediaCode}
+        and activity = true
+        and enable = true
+    </select>
+</mapper>

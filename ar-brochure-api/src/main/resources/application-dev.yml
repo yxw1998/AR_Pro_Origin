@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    username: username
+    password: password
+    url: url
+    hikari:
+      max-lifetime: 100000
+  redis:
+    host: host
+    password: password
+    database: 3
+
+
+#  jackson:
+#    default-property-inclusion: non_null
+
+mybatis:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+

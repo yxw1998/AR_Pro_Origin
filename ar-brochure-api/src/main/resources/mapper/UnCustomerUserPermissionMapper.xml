@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.UnCustomerUserPermissionMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.UnCustomerUserPermission">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="customerUserCode" jdbcType="VARCHAR" property="customerUserCode"/>
+        <result column="permissionCode" jdbcType="VARCHAR" property="permissionCode"/>
+        <result column="permissionName" jdbcType="VARCHAR" property="permissionName"/>
+        <result column="permissionLevel" jdbcType="INTEGER" property="permissionLevel"/>
+        <result column="parentCode" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, customerCode, customerUserCode, permissionCode, permissionName, permissionLevel,
+    parentCode, addTime, updateTime, `enable`, activity, createrCode
+    </sql>
+
+    <insert id="insert" parameterType="cn.ar.entity.UnCustomerUserPermission"
+            useGeneratedKeys="true">
+        insert into un_customer_user_permission (customerCode, customerUserCode, permissionCode,
+        permissionName, permissionLevel, parentCode,
+        addTime, updateTime, `enable`,
+        activity, createrCode)
+        values
+        <foreach collection="unCustomerPermissionList" item="item" separator=",">
+            (
+            #{item.customerCode},null,#{item.permissionCode},#{item.permissionName},#{item.permissionLevel},#{item.parentCode},
+            now(),null,true,true,#{item.createrCode}
+            )
+        </foreach>
+    </insert>
+    <insert id="insertCustomerUser">
+        insert into un_customer_user_permission (customerCode, customerUserCode, permissionCode,
+        permissionName, permissionLevel, parentCode,
+        addTime, updateTime, `enable`,
+        activity, createrCode)
+        values
+        <foreach collection="unCustomerUserPermissionList" item="item" separator=",">
+            (
+            #{item.customerCode},#{item.customerUserCode},#{item.permissionCode},#{item.permissionName},#{item.permissionLevel},#{item.parentCode},
+            now(),null,true,true,#{item.createrCode}
+            )
+        </foreach>
+    </insert>
+    <select id="selCustomerPermission" resultType="cn.ar.entity.UnCustomerUserPermission">
+        select *
+        from un_customer_user_permission
+        where customerCode = #{customerCode}
+          and permissionCode = #{permissionCode}
+          and customerUserCode is null
+          and activity = true
+          and enable = true
+    </select>
+    <select id="selCustomerUserPermission" resultType="cn.ar.entity.UnCustomerUserPermission">
+        select *
+        from un_customer_user_permission
+        where customerCode = #{customerCode}
+          and customerUserCode = #{customerUserCode}
+          and permissionCode = #{permissionCode}
+          and activity = true
+          and enable = true
+    </select>
+</mapper>

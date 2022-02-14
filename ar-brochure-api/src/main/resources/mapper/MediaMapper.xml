@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.MediaMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.Media">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="projectCode" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="basePicCode" jdbcType="VARCHAR" property="basePicCode"/>
+        <result column="classCode" jdbcType="VARCHAR" property="classCode"/>
+        <result column="mediaCode" jdbcType="VARCHAR" property="mediaCode"/>
+        <result column="mediaType" jdbcType="INTEGER" property="mediaType"/>
+        <result column="mediaTitle" jdbcType="VARCHAR" property="mediaTitle"/>
+        <result column="mediaIntroduce" jdbcType="VARCHAR" property="mediaIntroduce"/>
+        <result column="mediaSequence" jdbcType="INTEGER" property="mediaSequence"/>
+        <result column="isInteraction" jdbcType="BIT" property="isInteraction"/>
+        <result column="mediaObsName" jdbcType="VARCHAR" property="mediaObsName"/>
+        <result column="mediaName" jdbcType="VARCHAR" property="mediaName"/>
+        <result column="mediaObsPath" jdbcType="VARCHAR" property="mediaObsPath"/>
+        <result column="fileSuffix" jdbcType="VARCHAR" property="fileSuffix"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    customerCode, projectCode, basePicCode, classCode, mediaCode, mediaType, mediaTitle,
+    mediaIntroduce, mediaSequence, isInteraction, mediaObsName, mediaName,
+concat("//ar-test-1130.obs.cn-east-3.myhuaweicloud.com/",mediaObsPath,mediaObsName) as mediaObsPath
+# concat("//obsa.arsnowslide.com/",mediaObsPath,mediaObsName) as mediaObsPath
+,fileSuffix
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.Media" useGeneratedKeys="true">
+        insert into media (customerCode, projectCode, basePicCode,
+                           classCode, mediaCode, mediaType,
+                           mediaTitle, mediaIntroduce, mediaSequence,
+                           isInteraction, mediaObsName, mediaName,
+                           mediaObsPath, fileSuffix, addTime,
+                           updateTime, `enable`, activity,
+                           createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{basePicCode,jdbcType=VARCHAR},
+                #{classCode,jdbcType=VARCHAR}, #{mediaCode,jdbcType=VARCHAR}, #{mediaType,jdbcType=INTEGER},
+                #{mediaTitle,jdbcType=VARCHAR}, #{mediaIntroduce,jdbcType=VARCHAR}, #{mediaSequence,jdbcType=INTEGER},
+                #{isInteraction,jdbcType=BIT}, #{mediaObsName,jdbcType=VARCHAR}, #{mediaName,jdbcType=VARCHAR},
+                #{mediaObsPath,jdbcType=VARCHAR}, #{fileSuffix,jdbcType=VARCHAR}, now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <select id="selByName" resultType="cn.ar.entity.Media">
+        select
+        <include refid="Base_Column_List"/>
+        from media
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and mediaObsName = #{mediaObsName}
+        and mediaObsPath = #{mediaObsPath}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selByCodeShow" resultType="cn.ar.entity.Media">
+        select
+        <include refid="Base_Column_List" />
+        from media
+        where basePicCode = #{basePicCode}
+        and customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and classCode = #{classCode}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selMediaList" resultType="cn.ar.entity.Media">
+        select
+        <include refid="Base_Column_List" />
+        from media
+        where basePicCode = #{basePicCode}
+        and customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        <if test="classCode!=null">
+        and classCode = #{classCode}
+        </if>
+        and activity = true
+        and enable = true
+    </select>
+</mapper>

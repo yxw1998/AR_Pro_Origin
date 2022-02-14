@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.ManagerUserMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.ManagerUser">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="managerUserCode" jdbcType="VARCHAR" property="managerUserCode"/>
+        <result column="managerUserAccount" jdbcType="VARCHAR" property="managerUserAccount"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+        <collection property="permissionList" ofType="cn.ar.entity.Permission">
+            <id column="per_id" jdbcType="BIGINT" property="id"/>
+            <result column="permissionCode" jdbcType="VARCHAR" property="permissionCode"/>
+            <result column="permissionName" jdbcType="VARCHAR" property="permissionName"/>
+            <result column="permissionLevel" jdbcType="INTEGER" property="permissionLevel"/>
+            <result column="parentCode" jdbcType="VARCHAR" property="parentCode"/>
+            <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+            <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="enable" jdbcType="BIT" property="enable"/>
+            <result column="activity" jdbcType="BIT" property="activity"/>
+            <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+        </collection>
+    </resultMap>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.ManagerUser"
+            useGeneratedKeys="true">
+        insert into manager_user (managerUserCode, managerUserAccount,
+                                  `password`, `name`, phone,
+                                  addTime, updateTime, `enable`,
+                                  activity, createrCode)
+        values (#{managerUserCode,jdbcType=VARCHAR}, #{managerUserAccount,jdbcType=VARCHAR},
+                #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+                now(), null, true,
+                true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertLogin">
+        insert into manager_login_log (managerUserCode, loginTime, loginType, token, endTime, addTime, updateTime,
+                                       enable, activity, createrCode)
+        values (#{managerUserCode}, now(), 1, #{token}, null, now(), null, true, true, #{createrCode})
+    </insert>
+    <update id="logout">
+        update manager_login_log
+        set endTime    = now(),
+            updateTime = now()
+        where managerUserCode = #{code}
+          and token = #{token}
+          and activity = true
+          and enable = true
+    </update>
+        <select id="selByMaUserAccount" resultMap="BaseResultMap">
+            select a.*,b.permissionCode,b.permissionName,b.permissionLevel,b.parentCode
+            from manager_user a left join un_manager_permission b on a.managerUserCode = b.managerUserCode
+            where a.managerUserAccount = #{managerUserAccount}
+              and a.activity = true
+              and a.enable = true
+        </select>
+        <select id="selByMaUserCode" resultType="cn.ar.entity.ManagerUser">
+            select managerUserCode, managerUserAccount, name, phone
+            from manager_user
+            where managerUserCode = #{managerUserCode}
+              and activity = true
+              and enable = true
+        </select>
+    <select id="selAllMaUser" resultType="cn.ar.entity.ManagerUser">
+        select managerUserCode, managerUserAccount, name, phone
+        from manager_user where activity = true and enable = true
+        <if test="managerUserCodeList.size>0">
+            and managerUserCode in (
+            <foreach collection="managerUserCodeList" separator="," item="item">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+    <select id="selLoginLog" resultType="cn.ar.entity.ManagerLoginLog">
+        select * from manager_login_log where activity = true and activity = true
+        <if test="managerUserCodeList.size>0">
+            and managerUserCode in (
+            <foreach collection="managerUserCodeList" item="item" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+</mapper>

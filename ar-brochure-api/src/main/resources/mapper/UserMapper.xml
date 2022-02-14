@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.UserInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="userCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="userAccount" jdbcType="VARCHAR" property="userAccount"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="idCard" jdbcType="VARCHAR" property="idCard"/>
+        <result column="headPic" jdbcType="VARCHAR" property="headPic"/>
+        <result column="wxName" jdbcType="VARCHAR" property="wxName"/>
+        <result column="pubOpenId" jdbcType="VARCHAR" property="pubOpenid"/>
+        <result column="miniOpenId" jdbcType="VARCHAR" property="miniOpenid"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.UserInfo" useGeneratedKeys="true">
+        insert into user (userCode, userAccount, `password`,
+                          `name`, sex, phone, idCard,
+                          headPic, wxName, pubOpenId,
+                          miniOpenId, addTime, updateTime,
+                          `enable`, activity, createrCode)
+        values (#{userCode,jdbcType=VARCHAR}, #{userAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
+                #{idCard,jdbcType=VARCHAR},
+                #{headPic,jdbcType=VARCHAR}, #{wxName,jdbcType=VARCHAR}, #{pubOpenid,jdbcType=VARCHAR},
+                #{miniOpenid,jdbcType=VARCHAR}, now(), null,
+                true, true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="appletsRegister">
+        insert into user (userCode,
+                          `name`, sex, phone, idCard,
+                          headPic, wxName, pubOpenId,
+                          miniOpenId, addTime, updateTime,
+                          `enable`, activity, createrCode)
+        values (#{userCode,jdbcType=VARCHAR},
+                #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
+                #{idCard,jdbcType=VARCHAR},
+                #{headPic,jdbcType=VARCHAR}, #{wxName,jdbcType=VARCHAR}, #{pubOpenid,jdbcType=VARCHAR},
+                #{miniOpenid,jdbcType=VARCHAR}, now(), null,
+                true, true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <select id="selectByUserAccount" resultType="cn.ar.entity.UserInfo">
+        select *
+        from user
+        where userAccount = #{userAccount}
+          and activity = true
+          and enable = true
+    </select>
+    <select id="selByUserCode" resultType="cn.ar.entity.UserInfo">
+        select userCode,
+               userAccount,
+               name,
+               sex,
+               phone,
+               idCard,
+               headPic,
+               wxName,
+               pubOpenId,
+               miniOpenId
+        from user
+        where userCode = #{userCode}
+          and activity = true
+          and enable = true
+    </select>
+    <select id="selAllUser" resultType="cn.ar.entity.UserInfo">
+        select userCode,
+        userAccount,
+        name,
+        sex,
+        phone,
+        idCard,
+        headPic,
+        wxName,
+        pubOpenId,
+        miniOpenId
+        from user where activity = true and enable = true
+        <if test="userCodeList.size>0">
+            and userCode in (
+            <foreach collection="userCodeList" separator="," item="item">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+    <select id="selUserByMiniOpenId" resultType="cn.ar.entity.UserInfo">
+        select
+            userCode,
+            userAccount,
+            name,
+            sex,
+            phone,
+            idCard,
+            headPic,
+            wxName,
+            pubOpenId,
+            miniOpenId
+        from user
+        where miniOpenId = #{miniOpenid}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="checkRepeat" resultType="cn.ar.entity.UserInfo">
+        select miniOpenId
+        from user
+        where miniOpenId = #{miniOpenid}
+        and activity = true
+        and enable = true;
+    </select>
+
+</mapper>

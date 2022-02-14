@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.BasePicMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.BasePic">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="projectCode" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="basePicCode" jdbcType="VARCHAR" property="basePicCode"/>
+        <result column="basePicName" jdbcType="VARCHAR" property="basePicName"/>
+        <result column="cloudTargetId" jdbcType="VARCHAR" property="cloudTargetId"/>
+        <result column="baseObsName" jdbcType="VARCHAR" property="baseObsName"/>
+        <result column="baseObsPath" jdbcType="VARCHAR" property="baseObsPath"/>
+        <result column="fileSuffix" jdbcType="VARCHAR" property="fileSuffix"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        customerCode, projectCode, basePicCode, basePicName, cloudTargetId, baseObsName,
+    concat("//ar-test-1130.obs.cn-east-3.myhuaweicloud.com/",baseObsPath,baseObsName) as baseObsPath
+#     concat("//obsa.arsnowslide.com/",baseObsPath,baseObsName) as baseObsPath
+, fileSuffix
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.BasePic" useGeneratedKeys="true">
+        insert into base_pic (customerCode, projectCode, basePicCode,
+                              basePicName, cloudTargetId, baseObsName,
+                              baseObsPath, fileSuffix, addTime,
+                              updateTime, `enable`, activity,
+                              createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{basePicCode,jdbcType=VARCHAR},
+                #{basePicName,jdbcType=VARCHAR}, #{cloudTargetId,jdbcType=VARCHAR}, #{baseObsName,jdbcType=VARCHAR},
+                #{baseObsPath,jdbcType=VARCHAR}, #{fileSuffix,jdbcType=VARCHAR}, now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <select id="selByName" resultType="cn.ar.entity.BasePic">
+        select
+        <include refid="Base_Column_List"/>
+        from base_pic
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and baseObsName = #{baseObsName}
+        and baseObsPath = #{baseObsPath}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selByCode" resultType="cn.ar.entity.BasePic">
+        select
+        <include refid="Base_Column_List"/>
+        from base_pic
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and basePicCode = #{basePicCode}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selByTargetId" resultType="cn.ar.entity.BasePic">
+        select
+        <include refid="Base_Column_List"/>
+        from base_pic
+        where cloudTargetId = #{cloudTargetId}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selBasePicList" resultType="cn.ar.entity.BasePic">
+        select
+        <include refid="Base_Column_List"/>
+        from base_pic
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selBasePicByCloudId" resultType="cn.ar.entity.BasePic">
+        select
+        <include refid="Base_Column_List"/>
+        from base_pic
+        where cloudTargetId = #{cloudTargetId}
+        and activity = true
+        and enable = true
+    </select>
+</mapper>

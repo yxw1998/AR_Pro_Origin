@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.ProjectMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.ProjectInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="projectCode" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="projectName" jdbcType="VARCHAR" property="projectName"/>
+        <result column="projectIntroduce" jdbcType="VARCHAR" property="projectIntroduce"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        customerCode, projectCode, projectName, projectIntroduce
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.ProjectInfo"
+            useGeneratedKeys="true">
+        insert into project (customerCode, projectCode, projectName,
+                             projectIntroduce, addTime, updateTime,
+                             `enable`, activity, createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR},
+                #{projectIntroduce,jdbcType=VARCHAR}, now(),
+                null, true, true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <select id="selByName" resultType="cn.ar.entity.ProjectInfo">
+        select *
+        from project
+        where customerCode = #{customerCode}
+          and projectName = #{projectName}
+          and activity = true
+          and `enable` = true
+    </select>
+    <select id="selProjectList" resultType="cn.ar.entity.ProjectInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from project
+        where customerCode = #{customerCode}
+          and activity = true
+          and `enable` = true
+    </select>
+</mapper>

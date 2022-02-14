@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.MediaModelParamMapper">
+
+    <resultMap id="BaseResultMap" type="cn.ar.entity.MediaModelParam">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="customerCode" column="customerCode" jdbcType="VARCHAR"/>
+        <result property="projectCode" column="projectCode" jdbcType="VARCHAR"/>
+        <result property="mediaCode" column="mediaCode" jdbcType="VARCHAR"/>
+        <result property="modelParamCode" column="modelParamCode" jdbcType="VARCHAR"/>
+        <result property="placeParam" column="placeParam" jdbcType="VARCHAR"/>
+        <result property="zoomParam" column="zoomParam" jdbcType="VARCHAR"/>
+        <result property="rotateParam" column="rotateParam" jdbcType="VARCHAR"/>
+        <result property="addTime" column="addTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="enable" column="enable" jdbcType="BIT"/>
+        <result property="activity" column="activity" jdbcType="BIT"/>
+        <result property="createrCode" column="createrCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        customerCode,projectCode,
+        mediaCode,modelParamCode,placeParam,zoomParam,
+        rotateParam
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.MediaModelParam"
+            useGeneratedKeys="true">
+        insert into media_model_param
+        ( customerCode, projectCode
+        , mediaCode, modelParamCode, placeParam, zoomParam
+        , rotateParam, addTime, updateTime
+        , enable, activity, createrCode)
+        values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}
+                   , #{mediaCode,jdbcType=VARCHAR}, #{modelParamCode,jdbcType=VARCHAR}, #{placeParam,jdbcType=VARCHAR},
+                #{zoomParam,jdbcType=VARCHAR}
+                   , #{rotateParam,jdbcType=VARCHAR}, now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertList">
+        insert into media_model_param
+        ( customerCode, projectCode
+        , mediaCode,modelParamCode, placeParam, zoomParam
+        , rotateParam, addTime, updateTime
+        , enable, activity, createrCode)
+        values
+        <if test="mediaModelParamList.size()>0">
+            <foreach collection="mediaModelParamList" item="item" separator=",">
+                (#{item.customerCode,jdbcType=VARCHAR}, #{item.projectCode,jdbcType=VARCHAR}
+                , #{item.mediaCode,jdbcType=VARCHAR},#{item.modelParamCode,jdbcType=VARCHAR},
+                #{item.placeParam,jdbcType=VARCHAR}, #{item.zoomParam,jdbcType=VARCHAR}
+                , #{item.rotateParam,jdbcType=VARCHAR}, now(),
+                null, true, true,
+                #{item.createrCode,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+    </insert>
+    <select id="checkRepeat" resultType="cn.ar.entity.MediaModelParam">
+        select modelParamCode
+        from media_model_param
+        where customerCode = #{customerCode}
+          and projectCode = #{projectCode}
+          and mediaCode = #{mediaCode}
+          and modelParamCode = #{modelParamCode}
+          and activity = true
+          and enable = true
+    </select>
+    <select id="selByCodeShow" resultType="cn.ar.entity.MediaModelParam">
+        select
+        <include refid="Base_Column_List"/>
+        from media_model_param
+        where customerCode = #{customerCode}
+        and projectCode = #{projectCode}
+        and mediaCode = #{mediaCode}
+        and activity = true
+        and enable = true
+    </select>
+
+</mapper>

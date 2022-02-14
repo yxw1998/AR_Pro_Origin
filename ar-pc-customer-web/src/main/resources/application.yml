@@ -1,0 +1,16 @@
+server:
+  port: 8990
+  servlet:
+    context-path: /arPcCustomerWeb
+
+
+logging:
+  config: classpath:logback-spring.xml
+
+log:
+  localLogPath: ../log/customerWebLog
+  cloudLogPath: customerWebLog
+spring:
+  profiles:
+    active: dev
+#    active: prod

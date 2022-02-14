@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.ManagerLoginLogMapper">
+  <resultMap id="BaseResultMap" type="cn.ar.entity.ManagerLoginLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="managerUserCode" jdbcType="VARCHAR" property="managerUserCode" />
+    <result column="loginTime" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="loginType" jdbcType="INTEGER" property="loginType" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="endTime" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="enable" jdbcType="BIT" property="enable" />
+    <result column="activity" jdbcType="BIT" property="activity" />
+    <result column="createrCode" jdbcType="VARCHAR" property="createrCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, managerUserCode, loginTime, loginType, token, endTime, addTime, updateTime, `enable`, 
+    activity, createrCode
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from manager_login_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from manager_login_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.ManagerLoginLog" useGeneratedKeys="true">
+    insert into manager_login_log (managerUserCode, loginTime, loginType, 
+      token, endTime, addTime, 
+      updateTime, `enable`, activity, 
+      createrCode)
+    values (#{managerUserCode,jdbcType=VARCHAR}, #{loginTime,jdbcType=TIMESTAMP}, #{loginType,jdbcType=INTEGER}, 
+      #{token,jdbcType=VARCHAR}, #{endTime,jdbcType=TIMESTAMP}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{enable,jdbcType=BIT}, #{activity,jdbcType=BIT}, 
+      #{createrCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.ManagerLoginLog" useGeneratedKeys="true">
+    insert into manager_login_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="managerUserCode != null">
+        managerUserCode,
+      </if>
+      <if test="loginTime != null">
+        loginTime,
+      </if>
+      <if test="loginType != null">
+        loginType,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="endTime != null">
+        endTime,
+      </if>
+      <if test="addTime != null">
+        addTime,
+      </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
+      <if test="enable != null">
+        `enable`,
+      </if>
+      <if test="activity != null">
+        activity,
+      </if>
+      <if test="createrCode != null">
+        createrCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="managerUserCode != null">
+        #{managerUserCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginType != null">
+        #{loginType,jdbcType=INTEGER},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enable != null">
+        #{enable,jdbcType=BIT},
+      </if>
+      <if test="activity != null">
+        #{activity,jdbcType=BIT},
+      </if>
+      <if test="createrCode != null">
+        #{createrCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.ar.entity.ManagerLoginLog">
+    update manager_login_log
+    <set>
+      <if test="managerUserCode != null">
+        managerUserCode = #{managerUserCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        loginTime = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginType != null">
+        loginType = #{loginType,jdbcType=INTEGER},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null">
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null">
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enable != null">
+        `enable` = #{enable,jdbcType=BIT},
+      </if>
+      <if test="activity != null">
+        activity = #{activity,jdbcType=BIT},
+      </if>
+      <if test="createrCode != null">
+        createrCode = #{createrCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.ar.entity.ManagerLoginLog">
+    update manager_login_log
+    set managerUserCode = #{managerUserCode,jdbcType=VARCHAR},
+      loginTime = #{loginTime,jdbcType=TIMESTAMP},
+      loginType = #{loginType,jdbcType=INTEGER},
+      token = #{token,jdbcType=VARCHAR},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      addTime = #{addTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      `enable` = #{enable,jdbcType=BIT},
+      activity = #{activity,jdbcType=BIT},
+      createrCode = #{createrCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

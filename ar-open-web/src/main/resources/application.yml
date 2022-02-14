@@ -1,0 +1,14 @@
+server:
+  port: 8993
+  servlet:
+    context-path: /arOpenWeb
+spring:
+  profiles:
+    active: dev
+#    active: prod
+
+logging:
+  config: classpath:logback-spring.xml
+log:
+  localLogPath: ../log/openWebLog
+  cloudLogPath: openWebLog
