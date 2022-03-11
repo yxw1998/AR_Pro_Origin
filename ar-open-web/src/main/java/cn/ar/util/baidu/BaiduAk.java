@@ -25,9 +25,9 @@ public class BaiduAk {
      */
     public static String getAuth() {
         // 官网获取的 API Key 更新为你注册的
-        String clientId = "AK";
+        String clientId = "ak";
         // 官网获取的 Secret Key 更新为你注册的
-        String clientSecret = "SK";
+        String clientSecret = "sk";
         return getAuth(clientId, clientSecret);
     }
 

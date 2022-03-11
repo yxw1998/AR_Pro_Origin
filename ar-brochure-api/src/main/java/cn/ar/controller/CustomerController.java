@@ -4,6 +4,7 @@ package cn.ar.controller;
 import cn.ar.common.GeneralResult;
 import cn.ar.dto.PermissionDto;
 import cn.ar.entity.Customer;
+import cn.ar.entity.CustomerTopup;
 import cn.ar.entity.ManagerUser;
 import cn.ar.entity.UnCustomerUserPermission;
 import cn.ar.service.CustomerService;
@@ -94,6 +95,24 @@ public class CustomerController {
         return customerService.selCustomerUserPermissionList(unCustomerUserPermission, userSessCode, comSessCode);
     }
 
+    @ApiOperation("查询主体账号剩余扫描次数")
+    @PostMapping("/selCustomerLeft")
+    public GeneralResult selCustomerLeft(@RequestBody Customer customer , String userSessCode, String comSessCode) {
+        log.info("查询主体账号剩余扫描次数----->{}" + customer);
+        return customerService.selCustomerLeft(customer, userSessCode, comSessCode);
+    }
 
+    @ApiOperation("查询主体账号充值次数记录")
+    @PostMapping("/selCustomerTopup")
+    public GeneralResult selCustomerTopup(@RequestBody Customer customer , String userSessCode, String comSessCode) {
+        log.info("查询主体账号充值次数记录----->{}" + customer);
+        return customerService.selCustomerTopup(customer, userSessCode, comSessCode);
+    }
 
+    @ApiOperation("主体账号扫描次数充值")
+    @PostMapping("/insertCustomerTopup")
+    public GeneralResult insertCustomerTopup(@RequestBody CustomerTopup customerTopup , String userSessCode, String comSessCode) {
+        log.info("主体账号充值次数----->{}" + customerTopup);
+        return customerService.insertCustomerTopup(customerTopup, userSessCode, comSessCode);
+    }
 }

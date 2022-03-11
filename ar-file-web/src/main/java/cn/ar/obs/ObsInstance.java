@@ -2,16 +2,19 @@ package cn.ar.obs;
 
 
 import com.obs.services.ObsClient;
+import com.obs.services.exception.ObsException;
 import com.obs.services.model.*;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.DateUtils;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +26,9 @@ import java.util.Map;
 
 public class ObsInstance {
 
-    public static final String AK = "AK";
-    public static final String SK = "SK";
-    public static final String ENDPOINT = "ENDPOINT";
+    public static final String AK = "ak";
+    public static final String SK = "sk";
+    public static final String ENDPOINT = "xx.myhuaweicloud.com";
     private static ObsClient obsClient = new ObsClient(AK, SK, ENDPOINT);
 
     /**
@@ -35,8 +38,6 @@ public class ObsInstance {
     public static TemporarySignatureResponse createTemporarySignature(String objectName) {
         long expireSeconds = 1800;
         TemporarySignatureRequest request = new TemporarySignatureRequest(HttpMethodEnum.GET, expireSeconds);
-//        request.setBucketName("ar-test-1130");
-//        request.setBucketName("ar-prod");
         request.setObjectKey(objectName);
 
         Map<String, Object> queryParams = new HashMap<String, Object>();
@@ -60,7 +61,7 @@ public class ObsInstance {
         // 设置对象访问权限为公共读
         formParams.put("x-obs-acl", "public-read");
         // 设置对象MIME类型
-        formParams.put("content-type", "text/plain");
+        formParams.put("content-type", "image/jpeg");
         request.setFormParams(formParams);
         // 设置表单上传请求有效期，单位：秒
         request.setExpires(3600);
@@ -107,6 +108,24 @@ public class ObsInstance {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取对象临时访问URL
+     * @throws ObsException
+     * @throws IOException
+     */
+    public static void doGetObject() throws ObsException, IOException {
+        TemporarySignatureRequest req = new TemporarySignatureRequest(HttpMethodEnum.GET, 300);
+        req.setBucketName("xx");
+        req.setObjectKey("192468071792955392.jpg");
+        TemporarySignatureResponse res = obsClient.createTemporarySignature(req);
+        System.out.println("Getting object using temporary signature url:");
+        System.out.println("\t" + res.getSignedUrl());
+    }
+
+    public static void main(String[] args) throws IOException {
+        doGetObject();
     }
 }
 

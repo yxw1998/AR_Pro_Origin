@@ -60,6 +60,18 @@ public class BasePic implements Serializable {
     private String baseObsPath;
 
     /**
+     * fSet文件名称
+     */
+    @ApiModelProperty(value="基准图OBS文件路径（文件夹）")
+    private String fsetName;
+
+    /**
+     * fSet文件OBS路径
+     */
+    @ApiModelProperty(value="基准图OBS文件路径（文件夹）")
+    private String fsetObsPath;
+
+    /**
      * 文件后缀
      */
     @ApiModelProperty(value="文件后缀")

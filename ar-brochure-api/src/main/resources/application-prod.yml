@@ -1,14 +1,15 @@
 spring:
   datasource:
     username: username
-    password: password
-    url: url
+    password: pwd
+    url: jdbc:mysql://localhost:3306/ar?serverTimezone=Asia/Shanghai
     hikari:
       max-lifetime: 100000
   redis:
     host: host
-    password: password
+    password: pwd
     database: 3
+
 
 #  jackson:
 #    default-property-inclusion: non_null

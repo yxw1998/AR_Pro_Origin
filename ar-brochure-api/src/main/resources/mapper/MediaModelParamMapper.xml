@@ -13,6 +13,8 @@
         <result property="placeParam" column="placeParam" jdbcType="VARCHAR"/>
         <result property="zoomParam" column="zoomParam" jdbcType="VARCHAR"/>
         <result property="rotateParam" column="rotateParam" jdbcType="VARCHAR"/>
+        <result property="wideHigh" column="wideHigh" jdbcType="VARCHAR"/>
+        <result property="isTrack" column="isTrack" jdbcType="INTEGER"/>
         <result property="addTime" column="addTime" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
         <result property="enable" column="enable" jdbcType="BIT"/>
@@ -23,19 +25,19 @@
     <sql id="Base_Column_List">
         customerCode,projectCode,
         mediaCode,modelParamCode,placeParam,zoomParam,
-        rotateParam
+        rotateParam,wideHigh,isTrack
     </sql>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.MediaModelParam"
             useGeneratedKeys="true">
         insert into media_model_param
         ( customerCode, projectCode
         , mediaCode, modelParamCode, placeParam, zoomParam
-        , rotateParam, addTime, updateTime
+        , rotateParam, wideHigh, isTrack, addTime, updateTime
         , enable, activity, createrCode)
         values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}
                    , #{mediaCode,jdbcType=VARCHAR}, #{modelParamCode,jdbcType=VARCHAR}, #{placeParam,jdbcType=VARCHAR},
                 #{zoomParam,jdbcType=VARCHAR}
-                   , #{rotateParam,jdbcType=VARCHAR}, now(),
+                   , #{rotateParam,jdbcType=VARCHAR}, #{wideHigh,jdbcType=VARCHAR}, #{isTrack,jdbcType=INTEGER}, now(),
                 null, true, true,
                 #{createrCode,jdbcType=VARCHAR})
     </insert>
@@ -43,7 +45,7 @@
         insert into media_model_param
         ( customerCode, projectCode
         , mediaCode,modelParamCode, placeParam, zoomParam
-        , rotateParam, addTime, updateTime
+        , rotateParam,isTrack, wideHigh,addTime, updateTime
         , enable, activity, createrCode)
         values
         <if test="mediaModelParamList.size()>0">
@@ -51,7 +53,7 @@
                 (#{item.customerCode,jdbcType=VARCHAR}, #{item.projectCode,jdbcType=VARCHAR}
                 , #{item.mediaCode,jdbcType=VARCHAR},#{item.modelParamCode,jdbcType=VARCHAR},
                 #{item.placeParam,jdbcType=VARCHAR}, #{item.zoomParam,jdbcType=VARCHAR}
-                , #{item.rotateParam,jdbcType=VARCHAR}, now(),
+                , #{item.rotateParam,jdbcType=VARCHAR}, #{item.isTrack,jdbcType=INTEGER},#{item.wideHigh,jdbcType=VARCHAR},now(),
                 null, true, true,
                 #{item.createrCode,jdbcType=VARCHAR})
             </foreach>

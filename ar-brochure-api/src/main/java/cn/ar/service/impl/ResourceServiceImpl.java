@@ -39,6 +39,21 @@ public class ResourceServiceImpl implements ResourceService {
 
     private MediaModelParamMapper modelParamMapper;
 
+    private UserScanLogMapper userScanLogMapper;
+
+    private CustomerLeftMapper customerLeftMapper;
+
+
+    @Autowired
+    public void setCustomerLeftMapper(CustomerLeftMapper customerLeftMapper) {
+        this.customerLeftMapper = customerLeftMapper;
+    }
+
+    @Autowired
+    public void setUserScanLogMapper(UserScanLogMapper userScanLogMapper) {
+        this.userScanLogMapper = userScanLogMapper;
+    }
+
     @Autowired
     public void setModelParamMapper(MediaModelParamMapper modelParamMapper) {
         this.modelParamMapper = modelParamMapper;
@@ -153,51 +168,58 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public GeneralResult showResource(ResourceVo resourceVo, String userSessCode, String comSessCode) {
-        log.info("showRes Service -----> " + resourceVo.getBasePic());
-//        update
-        BasePic basePic = basePicMapper.selByTargetId(resourceVo.getBasePic());
-        resourceVo.setBasePic(basePic);
-        InterBaseParam baseParam = new InterBaseParam();
-        baseParam.setCustomerCode(basePic.getCustomerCode());
-        baseParam.setProjectCode(basePic.getProjectCode());
-        resourceVo.setBaseParamList(baseParamMapper.selBaseParamByMediaCode(baseParam));
-//        update
-        List<Classify> classifyList = classifyMapper.selByCodeShow(basePic);
-        List<Media> mediaList = new ArrayList<>();
-        classifyList.forEach(data -> {
-            mediaList.addAll(mediaMapper.selByCodeShow(data));
+        System.out.println("项目编号 : " + resourceVo.getProjectCode());
+//        ----- 查询基准图列表
+        BasePic basePic = new BasePic();
+        basePic.setProjectCode(resourceVo.getProjectCode());
+        basePic.setCustomerCode(comSessCode);
+        List<BasePic> basePicList = basePicMapper.selBasePicList(basePic);
+
+        if (basePicList == null) {
+            return GeneralResult.fail("没有相关记录!");
+        }
+        resourceVo.setBasePicList(new ArrayList<BasePic>());
+        resourceVo.setMediaList(new ArrayList<Media>());
+        resourceVo.setClassifyList(new ArrayList<Classify>());
+        resourceVo.setMaterialList(new ArrayList<Material>());
+        resourceVo.setAnimationList(new ArrayList<InterAnimation>());
+        resourceVo.setModelParamList(new ArrayList<MediaModelParam>());
+        resourceVo.setBaseParamList(new ArrayList<>());
+        basePicList.forEach(data -> {
+
+            List<Classify> classifyList = classifyMapper.selByCodeShow(data);
+
+            Media media = new Media();
+            media.setProjectCode(resourceVo.getProjectCode());
+            media.setCustomerCode(comSessCode);
+            media.setBasePicCode(data.getBasePicCode());
+            List<Media> mediaList = mediaMapper.selMediaList(media);
+
+            for (int i = 0; i < mediaList.size(); i++) {
+                if (materialMapper.selByCodeShow(mediaList.get(i)) != null) {
+                    resourceVo.getMaterialList().addAll(materialMapper.selByCodeShow(mediaList.get(i)));
+                }
+
+                if (interAnimationMapper.selByCodeShow(mediaList.get(i)) != null) {
+                    resourceVo.getAnimationList().addAll(interAnimationMapper.selByCodeShow(mediaList.get(i)));
+                }
+
+                if (modelParamMapper.selByCodeShow(mediaList.get(i)) != null) {
+                    resourceVo.getModelParamList().addAll(modelParamMapper.selByCodeShow(mediaList.get(i)));
+                }
+
+                if (baseParamMapper.selByCodeShow(mediaList.get(i)) != null) {
+                    resourceVo.getBaseParamList().addAll(baseParamMapper.selByCodeShow(mediaList.get(i)));
+                }
+            }
+
+
+            resourceVo.getClassifyList().addAll(classifyList);
+            resourceVo.getMediaList().addAll(mediaList);
         });
 
-        List<InterAnimation> animationList = new ArrayList<>();
-        List<Material> materialList = new ArrayList<>();
-        List<MediaModelParam> modelParamList = new ArrayList<>();
-        if (mediaList.size() > 0) {
-            mediaList.forEach(data -> {
-//                是否可交互
-                if (data.getIsInteraction()) {
-                    if (data.getMediaType() == 6) {
-                        if (interAnimationMapper.selByCodeShow(data) != null) {
-                            animationList.addAll(interAnimationMapper.selByCodeShow(data));
-                        }
-                    }
-                }
-
-//                放入附属文件
-                if (materialMapper.selByCodeShow(data) != null) {
-                    materialList.addAll(materialMapper.selByCodeShow(data));
-                }
-
-                if (modelParamMapper.selByCodeShow(data)!=null){
-                    modelParamList.addAll(modelParamMapper.selByCodeShow(data));
-                }
-
-            });
-        }
-        resourceVo.setClassifyList(classifyList);
-        resourceVo.setMediaList(mediaList);
-        resourceVo.setAnimationList(animationList);
-        resourceVo.setMaterialList(materialList);
-        resourceVo.setModelParamList(modelParamList);
+        resourceVo.getBasePicList().addAll(basePicList);
+        deduct(comSessCode);
         return GeneralResult.success(resourceVo);
     }
 
@@ -290,14 +312,14 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {RuntimeException.class})
     public GeneralResult uploadResourceAMB(ResourceVo resourceVo, String userSessCode, String comSessCode) {
 //        添加动作
         List<InterAnimation> animationList = resourceVo.getAnimationList();
-        if (animationList !=null && !animationList.isEmpty()){
+        if (animationList != null && !animationList.isEmpty()) {
             for (int i = 0; i < animationList.size(); i++) {
-                if (interAnimationMapper.checkRepeat(animationList.get(i))!=null) {
-                    throw new RuntimeException( animationList.get(i).getIconObsName()
+                if (interAnimationMapper.checkRepeat(animationList.get(i)) != null) {
+                    throw new RuntimeException(animationList.get(i).getIconObsName()
                             + "已存在,请查看编号或OBS文件名是否重复");
                 }
                 animationList.get(i).setCreaterCode(comSessCode);
@@ -307,10 +329,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 //        添加附属文件
         List<Material> materialList = resourceVo.getMaterialList();
-        if (materialList !=null && !materialList.isEmpty()){
+        if (materialList != null && !materialList.isEmpty()) {
             for (int i = 0; i < materialList.size(); i++) {
-                if (materialMapper.checkRepeat(materialList.get(i))!=null) {
-                    throw new RuntimeException( materialList.get(i).getMaterialObsName()
+                if (materialMapper.checkRepeat(materialList.get(i)) != null) {
+                    throw new RuntimeException(materialList.get(i).getMaterialObsName()
                             + "已存在,请查看编号或OBS文件名是否重复");
                 }
                 materialList.get(i).setCreaterCode(comSessCode);
@@ -320,10 +342,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 //        添加基本参数
         List<InterBaseParam> baseParamList = resourceVo.getBaseParamList();
-        if (baseParamList !=null && !baseParamList.isEmpty()){
+        if (baseParamList != null && !baseParamList.isEmpty()) {
             for (int i = 0; i < baseParamList.size(); i++) {
-                if (baseParamMapper.checkRepeat(baseParamList.get(i))!=null) {
-                    throw new RuntimeException( baseParamList.get(i).getBaseParamKey()
+                if (baseParamMapper.checkRepeat(baseParamList.get(i)) != null) {
+                    throw new RuntimeException(baseParamList.get(i).getBaseParamKey()
                             + "已存在,请查看参数名是否重复");
                 }
                 baseParamList.get(i).setCreaterCode(comSessCode);
@@ -333,10 +355,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 //        添加模型参数
         List<MediaModelParam> modelParamList = resourceVo.getModelParamList();
-        if (modelParamList !=null && !modelParamList.isEmpty()){
+        if (modelParamList != null && !modelParamList.isEmpty()) {
             for (int i = 0; i < modelParamList.size(); i++) {
-                if (modelParamMapper.checkRepeat(modelParamList.get(i))!=null) {
-                    throw new RuntimeException( modelParamList.get(i).getModelParamCode()
+                if (modelParamMapper.checkRepeat(modelParamList.get(i)) != null) {
+                    throw new RuntimeException(modelParamList.get(i).getModelParamCode()
                             + "已存在,请查看参数名是否重复");
                 }
                 modelParamList.get(i).setCreaterCode(comSessCode);
@@ -347,12 +369,22 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public GeneralResult selResourceAMB(Media media, String userSessCode, String comSessCode) {
         ResourceVo resourceVo = new ResourceVo();
         resourceVo.setBaseParamList(baseParamMapper.selByCodeShow(media));
         resourceVo.setAnimationList(interAnimationMapper.selByCodeShow(media));
         resourceVo.setMaterialList(materialMapper.selByCodeShow(media));
         resourceVo.setModelParamList(modelParamMapper.selByCodeShow(media));
+//        扣除次数
+        deduct(media.getCustomerCode());
+//        添加用户扫描记录
+        UserScanLog userScanLog = new UserScanLog();
+        userScanLog.setUserCode(userSessCode);
+        userScanLog.setCustomerCode(media.getCustomerCode());
+        userScanLog.setProjectCode(media.getProjectCode());
+        userScanLog.setMediaCode(media.getMediaCode());
+        recordUserScan(userScanLog);
         return GeneralResult.success(resourceVo);
     }
 
@@ -363,5 +395,21 @@ public class ResourceServiceImpl implements ResourceService {
         resourceVo.setBasePic(baseDto);
         resourceVo.setClassifyList(classifyMapper.selByCodeShow(baseDto));
         return GeneralResult.success(resourceVo);
+    }
+
+    /**
+     * 扣除用户使用次数
+     *
+     * @param customerCode
+     */
+    private void deduct(String customerCode) {
+        customerLeftMapper.updateLeft(customerCode, -1);
+    }
+
+    /**
+     * 添加用户扫描记录
+     */
+    private void recordUserScan(UserScanLog userScanLog) {
+        userScanLogMapper.insert(userScanLog);
     }
 }

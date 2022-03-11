@@ -3,20 +3,23 @@ package cn.ar.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 /**
- * @author YangXw
- * @TableName media_model_param
+ * user_scan_log
+ * @author 
  */
 @Data
-@JsonIgnoreProperties({"id", "addTime", "updateTime", "enable", "activity", "createrCode"})
-public class MediaModelParam implements Serializable {
-    /**
-     *
-     */
+@JsonIgnoreProperties({"id","updateTime","enable","activity","createrCode"})
+public class UserScanLog implements Serializable {
     private Long id;
+
+    /**
+     * 用户编号（雪花、唯一）
+     */
+    private String userCode;
 
     /**
      * 所属主体编号
@@ -29,43 +32,14 @@ public class MediaModelParam implements Serializable {
     private String projectCode;
 
     /**
-     * 所属资源编号
+     * 基准图编号
      */
     private String mediaCode;
 
     /**
-     * 模型参数编号
-     */
-    private String modelParamCode;
-
-    /**
-     * 模型位置参数
-     */
-    private String placeParam;
-
-    /**
-     * 模型缩放参数
-     */
-    private String zoomParam;
-
-    /**
-     * 模型旋转参数
-     */
-    private String rotateParam;
-
-    /**
-     * 宽高
-     */
-    private String wideHigh;
-
-    /**
-     * 是否带追踪版本 1 ：带追踪  0 ：不带追踪
-     */
-    private String isTrack;
-
-    /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
 
     /**

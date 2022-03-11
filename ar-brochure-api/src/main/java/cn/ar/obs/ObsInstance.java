@@ -54,7 +54,7 @@ public class ObsInstance {
         // 设置对象访问权限为公共读
         formParams.put("x-obs-acl", "public-read");
         // 设置对象MIME类型
-        formParams.put("content-type", "text/plain");
+        formParams.put("content-type", "image/jpeg");
         request.setFormParams(formParams);
         // 设置表单上传请求有效期，单位：秒
         request.setExpires(3600);

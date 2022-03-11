@@ -6,9 +6,7 @@ package cn.ar.http.path;
  * @description
  */
 public class HttpUrl {
-        public static final String AR_MANAGEMENT = "dev";
-//    public static final String AR_MANAGEMENT = "prod";
-
+        public static final String AR_MANAGEMENT = "http://localhost:8081/arBrochureApi/";
 
     public static String getArManagementUrl(String uri,String userSessCode,String comSessCode){
         return AR_MANAGEMENT + uri + "?userSessCode=" + userSessCode + "&comSessCode=" + comSessCode;

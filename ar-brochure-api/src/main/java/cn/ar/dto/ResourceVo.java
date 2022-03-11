@@ -1,6 +1,7 @@
 package cn.ar.dto;
 
 import cn.ar.entity.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +14,10 @@ import java.util.List;
 @Data
 public class ResourceVo {
 
+    private String projectCode;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private BasePic basePic;
+    private List<BasePic> basePicList;
     private List<Classify> classifyList;
     private List<Media> mediaList;
     private List<Material> materialList;

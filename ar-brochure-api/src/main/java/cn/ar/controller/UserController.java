@@ -90,5 +90,12 @@ public class UserController {
         return userService.selHistoryByMini(userProHistory,userSessCode,comSessCode);
     }
 
+    @ApiOperation("查询用户扫描识别记录")
+    @PostMapping("/selUserScanLog")
+    public GeneralResult selUserScanLog(@RequestBody UserInfo userInfo, String userSessCode, String comSessCode){
+        log.info("查询用户扫描识别记录");
+        return userService.selUserScanLog(userInfo,userSessCode,comSessCode);
+    }
+
 
 }

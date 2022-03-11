@@ -1,4 +1,4 @@
-package cn.ar.schedule;
+package cn.ar.util.schedule;
 
 import cn.ar.obs.ObsInstance;
 import lombok.Data;

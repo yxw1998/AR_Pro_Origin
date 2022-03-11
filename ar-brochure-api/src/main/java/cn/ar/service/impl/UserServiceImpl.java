@@ -5,13 +5,13 @@ import cn.ar.entity.UserInfo;
 import cn.ar.entity.UserProHistory;
 import cn.ar.mapper.UserMapper;
 import cn.ar.mapper.UserProHistoryMapper;
+import cn.ar.mapper.UserScanLogMapper;
 import cn.ar.service.UserService;
 import cn.ar.util.MD5;
 import cn.ar.util.NewSnowUtil;
 import cn.ar.util.RedisUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +29,16 @@ public class UserServiceImpl implements UserService {
     private RedisUtil redisUtil;
     private UserProHistoryMapper userProHistoryMapper;
 
+    private UserScanLogMapper userScanLogMapper;
+
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
+    }
+
+    @Autowired
+    public void setUserScanLogMapper(UserScanLogMapper userScanLogMapper) {
+        this.userScanLogMapper = userScanLogMapper;
     }
 
     @Autowired
@@ -124,5 +131,11 @@ public class UserServiceImpl implements UserService {
             return GeneralResult.fail("用户没有浏览记录！");
         }
         return GeneralResult.success(resultList);
+    }
+
+    @Override
+    public GeneralResult selUserScanLog(UserInfo userInfo, String userSessCode, String comSessCode) {
+
+        return GeneralResult.success(userScanLogMapper.selUserScanLog(userInfo));
     }
 }

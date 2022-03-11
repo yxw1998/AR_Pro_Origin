@@ -7,8 +7,6 @@ package cn.ar.http.path;
  */
 public class HttpUrl {
     public static final String AR_MANAGEMENT = "http://localhost:8081/arBrochureApi/";
-//    public static final String AR_MANAGEMENT = "http://192.168.0.60:8081/arBrochureApi/";
-
 
     public static String getArManagementUrl(String uri,String userSessCode,String comSessCode){
         return AR_MANAGEMENT + uri + "?userSessCode=" + userSessCode + "&comSessCode=" + comSessCode;

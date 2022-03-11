@@ -12,9 +12,8 @@ import java.util.Date;
  */
 @Data
 public class ObsDto {
-    private String requestUrl = "ar-test-1130.obs.cn-east-3.myhuaweicloud.com";
-//    private String requestUrl = "ar-prod.obs.cn-east-3.myhuaweicloud.com";
-    private String accessKeyId = "AK";
+    private String requestUrl = "xx.myhuaweicloud.com";
+    private String accessKeyId = "ak";
     private String policy;
     private String signature;
     private String expiration;

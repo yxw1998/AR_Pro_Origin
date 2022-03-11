@@ -78,4 +78,10 @@ public class UserController {
     public Object selHistoryByMini(@RequestBody String json,String userSessCode,String comSessCode) {
         return httpClientService.doPost(HttpUrl.getArManagementUrl("user/selHistoryByMini",userSessCode,comSessCode),json);
     }
+
+    @ApiOperation("查询用户扫描识别记录")
+    @PostMapping(value = "/selUserScanLog", produces = "application/json;charset=utf-8")
+    public Object selUserScanLog(@RequestBody String json,String userSessCode,String comSessCode) {
+        return httpClientService.doPost(HttpUrl.getArManagementUrl("user/selUserScanLog",userSessCode,comSessCode),json);
+    }
 }

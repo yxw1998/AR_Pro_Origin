@@ -16,6 +16,7 @@
         <result column="mediaObsName" jdbcType="VARCHAR" property="mediaObsName"/>
         <result column="mediaName" jdbcType="VARCHAR" property="mediaName"/>
         <result column="mediaObsPath" jdbcType="VARCHAR" property="mediaObsPath"/>
+        <result column="mediaCombinationType" jdbcType="INTEGER" property="mediaCombinationType"/>
         <result column="fileSuffix" jdbcType="VARCHAR" property="fileSuffix"/>
         <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
         <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -26,23 +27,22 @@
     <sql id="Base_Column_List">
     customerCode, projectCode, basePicCode, classCode, mediaCode, mediaType, mediaTitle,
     mediaIntroduce, mediaSequence, isInteraction, mediaObsName, mediaName,
-concat("//ar-test-1130.obs.cn-east-3.myhuaweicloud.com/",mediaObsPath,mediaObsName) as mediaObsPath
-# concat("//obsa.arsnowslide.com/",mediaObsPath,mediaObsName) as mediaObsPath
-,fileSuffix
+concat("//xx.obs.cn-east-3.myhuaweicloud.com/",mediaObsPath,mediaObsName) as mediaObsPath
+,mediaCombinationType,fileSuffix
     </sql>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.Media" useGeneratedKeys="true">
         insert into media (customerCode, projectCode, basePicCode,
                            classCode, mediaCode, mediaType,
                            mediaTitle, mediaIntroduce, mediaSequence,
                            isInteraction, mediaObsName, mediaName,
-                           mediaObsPath, fileSuffix, addTime,
+                           mediaObsPath,mediaCombinationType, fileSuffix, addTime,
                            updateTime, `enable`, activity,
                            createrCode)
         values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{basePicCode,jdbcType=VARCHAR},
                 #{classCode,jdbcType=VARCHAR}, #{mediaCode,jdbcType=VARCHAR}, #{mediaType,jdbcType=INTEGER},
                 #{mediaTitle,jdbcType=VARCHAR}, #{mediaIntroduce,jdbcType=VARCHAR}, #{mediaSequence,jdbcType=INTEGER},
                 #{isInteraction,jdbcType=BIT}, #{mediaObsName,jdbcType=VARCHAR}, #{mediaName,jdbcType=VARCHAR},
-                #{mediaObsPath,jdbcType=VARCHAR}, #{fileSuffix,jdbcType=VARCHAR}, now(),
+                #{mediaObsPath,jdbcType=VARCHAR},#{mediaCombinationType,jdbcType=INTEGER}, #{fileSuffix,jdbcType=VARCHAR}, now(),
                 null, true, true,
                 #{createrCode,jdbcType=VARCHAR})
     </insert>

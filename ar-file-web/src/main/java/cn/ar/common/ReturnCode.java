@@ -11,7 +11,7 @@ import lombok.Getter;
 public enum ReturnCode {
     SUCCESS(1000, "操作成功！"),
     FAILED(1001, "操作失败！"),
-    WARN(1004, "警告！"),
+    WARN(1004, "友情提示！"),
     ERROR(999, "系统异常！"),
     VALIDATE_FAILED(1002, "参数检验失败"),
     UNAUTHORIZED(1003, "暂未登录或token已经过期"),

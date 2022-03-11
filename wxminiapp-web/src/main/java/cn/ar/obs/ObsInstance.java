@@ -18,9 +18,9 @@ import java.util.Map;
  * @description
  */
 public class ObsInstance {
-    public static final String AK = "EG86KZ5G1GAEYVLNWXBU";
-    public static final String SK = "9Tsfr1ULFbNacS2AFP8qTRMh0lf5YGkbbu4gvfm8";
-    public static final String ENDPOINT = "obs.cn-east-3.myhuaweicloud.com";
+    public static final String AK = "ak";
+    public static final String SK = "sk";
+    public static final String ENDPOINT = "xx.myhuaweicloud.com";
     private static ObsClient obsClient = new ObsClient(AK, SK, ENDPOINT);
 
     /**

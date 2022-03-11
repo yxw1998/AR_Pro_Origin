@@ -42,6 +42,12 @@ public class ProjectInfo implements Serializable {
     private String projectIntroduce;
 
     /**
+     * 文件后缀
+     */
+    @ApiModelProperty(value="识别方式 0：不追踪 1：单个追踪 2：无缝追踪")
+    private String trackType;
+
+    /**
      * 创建时间
      */
     @ApiModelProperty(value="创建时间")

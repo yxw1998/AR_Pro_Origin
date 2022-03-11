@@ -32,8 +32,8 @@ public class WxUtil {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
 
-    private static final String APPID = "wx70c27075e89d28b2";
-    private static final String SECRET = "f862bcbbd4161a8bee0d8476e1c94689";
+    private static final String APPID = "ak";
+    private static final String SECRET = "sk";
 
     private static boolean initialized = false;
 

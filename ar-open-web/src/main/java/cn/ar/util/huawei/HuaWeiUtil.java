@@ -29,16 +29,16 @@ public class HuaWeiUtil {
                 "   \"password\": {\n" +
                 "    \"user\": {\n" +
                 "     \"domain\": {\n" +
-                "      \"name\": \"NAME\"\n" +
+                "      \"name\": \"name\"\n" +
                 "     },\n" +
-                "     \"name\": \"NAME\",\n" +
-                "     \"password\": \"PWD\"\n" +
+                "     \"name\": \"name\",\n" +
+                "     \"password\": \"pwd\"\n" +
                 "    }\n" +
                 "   }\n" +
                 "  },\n" +
                 "  \"scope\": {\n" +
                 "   \"project\": {\n" +
-                "    \"name\": \"NAME\"\n" +
+                "    \"name\": \"cn-north-1\"\n" +
                 "   }\n" +
                 "  }\n" +
                 " }\n" +
@@ -60,7 +60,7 @@ public class HuaWeiUtil {
             e.printStackTrace();
         }
         System.out.println(jsonStr);
-        String imageSearchUrl = "https://imagesearch.cn-north-1.myhuaweicloud.com/v1/0da5069b4800f2c92ff1c00b8ba521b5/huawei-test/image/search";
+        String imageSearchUrl = "https://imagesearch.cn-north-1.myhuaweicloud.com/v1/0da5069b4800f2c92ff1c00b8ba521b5/xx/image/search";
         String result = "";
         try {
            result = HttpUtil.httpPostWithJSON(imageSearchUrl,jsonStr,getToken());
@@ -77,8 +77,7 @@ public class HuaWeiUtil {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println(jsonStr);
-        String imageSearchUrl = "https://imagesearch.cn-north-1.myhuaweicloud.com/v1/0da5069b4800f2c92ff1c00b8ba521b5/huawei-test/image";
+        String imageSearchUrl = "https://imagesearch.cn-north-1.myhuaweicloud.com/v1/0da5069b4800f2c92ff1c00b8ba521b5/xx/image";
         String result = "";
         try {
            result = HttpUtil.httpPostWithJSON(imageSearchUrl,jsonStr,getToken());

@@ -3,6 +3,7 @@ package cn.ar.service;
 import cn.ar.common.GeneralResult;
 import cn.ar.dto.PermissionDto;
 import cn.ar.entity.Customer;
+import cn.ar.entity.CustomerTopup;
 import cn.ar.entity.UnCustomerUserPermission;
 
 import java.util.List;
@@ -80,4 +81,32 @@ public interface CustomerService {
      * @return
      */
     GeneralResult selCustomerUserPermissionList(UnCustomerUserPermission unCustomerUserPermission, String userSessCode, String comSessCode);
+
+    /**
+     * 查询主体账号剩余扫描次数
+     * @param customer
+     * @param userSessCode
+     * @param comSessCode
+     * @return
+     */
+    GeneralResult selCustomerLeft(Customer customer, String userSessCode, String comSessCode);
+
+    /**
+     * 查询主体账号充值次数记录
+     * @param customer
+     * @param userSessCode
+     * @param comSessCode
+     * @return
+     */
+    GeneralResult selCustomerTopup(Customer customer, String userSessCode, String comSessCode);
+
+    /**
+     * 主体账号充值次数
+     * @param customerTopup
+     * @param userSessCode
+     * @param comSessCode
+     * @return
+     */
+    GeneralResult insertCustomerTopup(CustomerTopup customerTopup, String userSessCode, String comSessCode);
+
 }

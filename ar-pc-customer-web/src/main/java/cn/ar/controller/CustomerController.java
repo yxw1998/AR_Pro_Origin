@@ -81,4 +81,16 @@ public class CustomerController {
     public Object selCustomerUserPermissionList(@RequestBody String json,String userSessCode,String comSessCode) {
         return httpClientService.doPost(HttpUrl.getArManagementUrl("customer/selCustomerUserPermissionList",userSessCode,comSessCode),json);
     }
+
+    @ApiOperation("查询主体账号剩余扫描次数")
+    @PostMapping(value = "/selCustomerLeft", produces = "application/json;charset=utf-8")
+    public Object selCustomerLeft(@RequestBody String json,String userSessCode,String comSessCode) {
+        return httpClientService.doPost(HttpUrl.getArManagementUrl("customer/selCustomerLeft",userSessCode,comSessCode),json);
+    }
+
+    @ApiOperation("查询主体账号充值次数记录")
+    @PostMapping(value = "/selCustomerTopup", produces = "application/json;charset=utf-8")
+    public Object selCustomerTopup(@RequestBody String json,String userSessCode,String comSessCode) {
+        return httpClientService.doPost(HttpUrl.getArManagementUrl("customer/selCustomerTopup",userSessCode,comSessCode),json);
+    }
 }

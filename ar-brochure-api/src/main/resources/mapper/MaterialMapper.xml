@@ -21,8 +21,7 @@
     <sql id="Base_Column_List">
         customerCode, projectCode, mediaCode, materialCode, materialType, materialObsName,
     materialName,
-concat("//ar-test-1130.obs.cn-east-3.myhuaweicloud.com/",materialObsPath,materialObsName) as materialObsPath
-#     concat("//obsa.arsnowslide.com/",materialObsPath,materialObsName) as materialObsPath
+concat("//xx.obs.cn-east-3.myhuaweicloud.com/",materialObsPath,materialObsName) as materialObsPath
 , fileSuffix
     </sql>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.Material" useGeneratedKeys="true">

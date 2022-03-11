@@ -80,4 +80,13 @@ public interface UserService {
      * @return
      */
     GeneralResult selHistoryByMini(UserProHistory userProHistory, String userSessCode, String comSessCode);
+
+    /**
+     * 查询用户扫描识别记录
+     * @param userInfo
+     * @param userSessCode
+     * @param comSessCode
+     * @return
+     */
+    GeneralResult selUserScanLog(UserInfo userInfo, String userSessCode, String comSessCode);
 }

@@ -199,5 +199,4 @@ public interface ResourceService {
      * @return
      */
     GeneralResult selBasePicByCid(BasePic basePic);
-
 }

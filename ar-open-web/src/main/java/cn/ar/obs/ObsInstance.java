@@ -20,7 +20,7 @@ import java.util.Map;
 public class ObsInstance {
     public static final String AK = "AK";
     public static final String SK = "SK";
-    public static final String ENDPOINT = "ENDPOINT";
+    public static final String ENDPOINT = "XX.myhuaweicloud.com";
     private static ObsClient obsClient = new ObsClient(AK, SK, ENDPOINT);
 
     /**
@@ -30,7 +30,7 @@ public class ObsInstance {
     public static TemporarySignatureResponse createTemporarySignature(String objectName) {
         long expireSeconds = 1800;
         TemporarySignatureRequest request = new TemporarySignatureRequest(HttpMethodEnum.GET, expireSeconds);
-        request.setBucketName("ar-test-1130");
+        request.setBucketName("xx");
         request.setObjectKey(objectName);
 
         Map<String, Object> queryParams = new HashMap<String, Object>();

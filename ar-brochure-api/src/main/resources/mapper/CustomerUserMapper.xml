@@ -36,7 +36,7 @@
         customerCode, customerUserCode, customerUserAccount, `name`, sex,
     email, phone, pubOpenId, miniOpenId, vipLevel
     </sql>
-    <!--    <include refid="Base_Column_List" />-->
+
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.CustomerUser"
             useGeneratedKeys="true">
         insert into customer_user (customerCode, customerUserCode, customerUserAccount,

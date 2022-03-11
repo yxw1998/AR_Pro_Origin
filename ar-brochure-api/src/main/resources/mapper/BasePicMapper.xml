@@ -10,6 +10,8 @@
         <result column="cloudTargetId" jdbcType="VARCHAR" property="cloudTargetId"/>
         <result column="baseObsName" jdbcType="VARCHAR" property="baseObsName"/>
         <result column="baseObsPath" jdbcType="VARCHAR" property="baseObsPath"/>
+        <result column="fsetName" jdbcType="VARCHAR" property="fsetName"/>
+        <result column="fsetObsPath" jdbcType="VARCHAR" property="fsetObsPath"/>
         <result column="fileSuffix" jdbcType="VARCHAR" property="fileSuffix"/>
         <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
         <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -19,19 +21,20 @@
     </resultMap>
     <sql id="Base_Column_List">
         customerCode, projectCode, basePicCode, basePicName, cloudTargetId, baseObsName,
-    concat("//ar-test-1130.obs.cn-east-3.myhuaweicloud.com/",baseObsPath,baseObsName) as baseObsPath
-#     concat("//obsa.arsnowslide.com/",baseObsPath,baseObsName) as baseObsPath
-, fileSuffix
+    concat("//xx.obs.cn-east-3.myhuaweicloud.com/",baseObsPath,baseObsName) as baseObsPath
+, fsetName,
+concat("//xx.obs.cn-east-3.myhuaweicloud.com/",fsetObsPath,fsetName) as fsetObsPath
+,fileSuffix
     </sql>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.BasePic" useGeneratedKeys="true">
         insert into base_pic (customerCode, projectCode, basePicCode,
                               basePicName, cloudTargetId, baseObsName,
-                              baseObsPath, fileSuffix, addTime,
+                              baseObsPath,fsetName,fsetObsPath,fileSuffix, addTime,
                               updateTime, `enable`, activity,
                               createrCode)
         values (#{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, #{basePicCode,jdbcType=VARCHAR},
                 #{basePicName,jdbcType=VARCHAR}, #{cloudTargetId,jdbcType=VARCHAR}, #{baseObsName,jdbcType=VARCHAR},
-                #{baseObsPath,jdbcType=VARCHAR}, #{fileSuffix,jdbcType=VARCHAR}, now(),
+                #{baseObsPath,jdbcType=VARCHAR},#{fsetName,jdbcType=VARCHAR},#{fsetObsPath,jdbcType=VARCHAR}, #{fileSuffix,jdbcType=VARCHAR}, now(),
                 null, true, true,
                 #{createrCode,jdbcType=VARCHAR})
     </insert>

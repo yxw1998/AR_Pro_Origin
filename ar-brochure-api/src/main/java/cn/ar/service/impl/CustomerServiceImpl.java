@@ -3,8 +3,11 @@ package cn.ar.service.impl;
 import cn.ar.common.GeneralResult;
 import cn.ar.dto.PermissionDto;
 import cn.ar.entity.Customer;
+import cn.ar.entity.CustomerTopup;
 import cn.ar.entity.UnCustomerUserPermission;
+import cn.ar.mapper.CustomerLeftMapper;
 import cn.ar.mapper.CustomerMapper;
+import cn.ar.mapper.CustomerTopupMapper;
 import cn.ar.mapper.UnCustomerUserPermissionMapper;
 import cn.ar.service.CustomerService;
 import cn.ar.util.MD5;
@@ -14,6 +17,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     private UnCustomerUserPermissionMapper unCustomerUserPermissionMapper;
 
+    private CustomerLeftMapper customerLeftMapper;
+
+    private CustomerTopupMapper customerTopupMapper;
+
     private RedisUtil redisUtil;
+
+    @Autowired
+    public void setCustomerTopupMapper(CustomerTopupMapper customerTopupMapper) {
+        this.customerTopupMapper = customerTopupMapper;
+    }
+
+    @Autowired
+    public void setCustomerLeftMapper(CustomerLeftMapper customerLeftMapper) {
+        this.customerLeftMapper = customerLeftMapper;
+    }
 
     @Autowired
     public void setCustomerMapper(CustomerMapper customerMapper) {
@@ -156,5 +174,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public GeneralResult selCustomerUserPermissionList(UnCustomerUserPermission unCustomerUserPermission, String userSessCode, String comSessCode) {
         return GeneralResult.success(customerMapper.selCustomerUserPermissionList(unCustomerUserPermission));
+    }
+
+    @Override
+    public GeneralResult selCustomerLeft(Customer customer, String userSessCode, String comSessCode) {
+        return GeneralResult.success(customerLeftMapper.selCustomerLeft(customer));
+    }
+
+    @Override
+    public GeneralResult selCustomerTopup(Customer customer, String userSessCode, String comSessCode) {
+        return GeneralResult.success(customerTopupMapper.selCustomerTopup(customer));
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public GeneralResult insertCustomerTopup(CustomerTopup customerTopup, String userSessCode, String comSessCode) {
+        customerTopupMapper.insert(customerTopup);
+        customerLeftMapper.updateLeft(customerTopup.getCustomerCode(),customerTopup.getTopupCount());
+        return GeneralResult.success(customerTopup.getTopupCount());
     }
 }

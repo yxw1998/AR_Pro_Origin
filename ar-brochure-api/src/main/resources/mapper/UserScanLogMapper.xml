@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ar.mapper.UserScanLogMapper">
+    <resultMap id="BaseResultMap" type="cn.ar.entity.UserScanLog">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="userCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="customerCode" jdbcType="VARCHAR" property="customerCode"/>
+        <result column="projectCode" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="mediaCode" jdbcType="VARCHAR" property="mediaCode"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userCode, customerCode, projectCode, mediaCode,addTime
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.ar.entity.UserScanLog"
+            useGeneratedKeys="true">
+        insert into user_scan_log (userCode, customerCode, projectCode,
+                                   mediaCode, addTime, updateTime,
+                                   `enable`, activity, createrCode)
+        values (#{userCode,jdbcType=VARCHAR}, #{customerCode,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR},
+                #{mediaCode,jdbcType=VARCHAR}, now(),
+                null, true, true, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <select id="selUserScanLog" resultType="cn.ar.entity.UserScanLog">
+        select
+        <include refid="Base_Column_List"/>
+        from user_scan_log
+        where userCode = #{userCode}
+        and enable = true
+        and activity = true
+    </select>
+</mapper>

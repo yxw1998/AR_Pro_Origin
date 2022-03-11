@@ -98,6 +98,12 @@ public class Media implements Serializable {
     private String mediaObsPath;
 
     /**
+     * 资源组合类型
+     */
+    @ApiModelProperty(value="资源组合类型")
+    private Integer mediaCombinationType;
+
+    /**
      * 文件后缀
      */
     @ApiModelProperty(value="文件后缀")

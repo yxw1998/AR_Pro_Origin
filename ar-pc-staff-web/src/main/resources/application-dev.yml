@@ -6,8 +6,8 @@ server:
 spring:
   redis:
     database: 3
-    password: pwd
-    host: host
+    password: webredis
+    host: 123.60.71.74
     timeout: 5000
     jedis:
       pool:

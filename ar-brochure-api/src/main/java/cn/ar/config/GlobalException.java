@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalException {
 
-    @ExceptionHandler(Exception.class)
-    public GeneralResult exception(Exception e) {
-        log.error("全局异常处理-----{}" + e.getMessage());
-        return GeneralResult.error(e.getMessage());
-    }
+//    @ExceptionHandler(Exception.class)
+//    public GeneralResult exception(Exception e) {
+//        log.error("全局异常处理-----{}" + e.getMessage());
+//        return GeneralResult.error(e.getMessage());
+//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public GeneralResult exception2(MethodArgumentNotValidException e) {
